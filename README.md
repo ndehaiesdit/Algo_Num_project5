@@ -1,4 +1,4 @@
-Projet n°5 -  Interpolation et d'intégration des méthodes / splines cubiques et interpolation de surface
+Projet n°5 - Méthodes d'interpolation et d'intégration
 ==========================================================================
 
 Auteurs :
