@@ -1,4 +1,4 @@
-Projet n°5 - Méthodes d'interpolation et d'intégration
+Projet n°5 - Méthodes d'interpolation et d'intégration.
 ==========================================================================
 
 Auteurs :
