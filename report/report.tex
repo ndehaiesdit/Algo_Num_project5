@@ -1,0 +1,48 @@
+\documentclass{article}
+
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+
+%%%%%%%%%%%%%%%% Lengths %%%%%%%%%%%%%%%%
+\setlength{\textwidth}{15.5cm}
+\setlength{\evensidemargin}{0.5cm}
+\setlength{\oddsidemargin}{0.5cm}
+
+%%%%%%%%%%%%%%%% Variables %%%%%%%%%%%%%%%%
+\def\projet{5}
+\def\titre{Interpolation and integration methods / Cubic splines and surface interpolation}
+\def\groupe{2}
+\def\equipe{2}
+\def\responsible{chelou001}
+\def\secretary{desparbes}
+\def\others{lgrelet, ndehaiesdit, tagry}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%% Header %%%%%%%%%%%%%%%%
+\noindent\begin{minipage}{0.98\textwidth}
+  \vskip 0mm
+  \noindent
+  { \begin{tabular}{p{7.5cm}}
+      {\bfseries \sffamily
+        Projet n°\projet} \\
+      {\itshape \titre}
+    \end{tabular}}
+  \hfill
+  \fbox{\begin{tabular}{l}
+      {~\hfill \bfseries \sffamily Groupe n°\groupe\ - Equipe n°\equipe
+        \hfill~} \\[2mm]
+      Responsable : \responsible \\
+      Secrétaire : \secretary \\
+      Codeurs : \others
+    \end{tabular}}
+  \vskip 4mm ~
+
+  ~~~\parbox{0.95\textwidth}{\small \textit{Résumé~:} \sffamily This project implements a (somewhat basic) model to represent the air flow around an airfoil, i.e. the cross section of an aircraft's wing. The goal consists in obtaining a pressure map above and below the wing, so as to approximate the wing's lift, i.e. its ability to sustain the plane in the air. This is to be done in two steps : first, refine the airfoil into a sufficiently smooth curve, then compute the pressure map using integration methods. }
+  \vskip 1mm ~
+\end{minipage}
+
+%%%%%%%%%%%%%%%% Main part %%%%%%%%%%%%%%%%
+\section*{}
+
+\end{document}
