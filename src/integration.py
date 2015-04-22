@@ -12,7 +12,7 @@ def rect_meth(x, y, n, f):
     a = (y-x)/n
     s = 0.0
     t = np.arange(0, n)
-    for i in t:
+    for i in range(0,n):
         s += f(x + i*a)
     return a*s
     
@@ -53,3 +53,11 @@ def monte_carlo_meth(x, y, n, f):
 def length(I, n, df, x, y):
     length = lambda x: np.sqrt(1 + (df(x)*df(x)))
     return I(x, y, n, length)
+
+def coef_to_fonction(A, B, C, D):
+    return length x: A*(x**3) + B*(x**2) + C*x + D
+
+def coef_to_deriv_fonction(A, B, C, D):
+    return length x: A*3*(x**2) + B*2*x + C    
+
+
