@@ -55,9 +55,9 @@ def length(I, n, df, x, y):
     return I(x, y, n, length)
 
 def coef_to_fonction(A, B, C, D):
-    return length x: A*(x**3) + B*(x**2) + C*x + D
+    return lambda x: A*(x**3) + B*(x**2) + C*x + D
 
 def coef_to_deriv_fonction(A, B, C, D):
-    return length x: A*3*(x**2) + B*2*x + C    
+    return lambda x: A*3*(x**2) + B*2*x + C    
 
 
