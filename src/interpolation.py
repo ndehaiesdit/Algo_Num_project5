@@ -8,6 +8,9 @@ import numpy.random as npr
 #        CUBIC SPLINES METHOD      #
 #----------------------------------#
 
+# Approximation of the second derivate of a function taking a value y on each x,
+# a derivate yp1 on the first x, a derivate ypn on the last.
+# max is supposed to be a "huge" value in order to prevent a divergence
 def second_derivate(x, y, yp1, ypn, max):
     n = np.size(x) - 1;
     u = np.zeros(n);
@@ -40,6 +43,9 @@ def second_derivate(x, y, yp1, ypn, max):
 
     return y2;
 
+# The cubic spline interpolation method of a function f 
+# which takes the value y for each x, a second derivate y2 for each x. 
+# It returns f(value)
 def cubic_spline_meth(x, y, y2, value):
     n = np.size(x) - 1;
     klo = 0;

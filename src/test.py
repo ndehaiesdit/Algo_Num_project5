@@ -17,16 +17,21 @@ f = lambda x: np.cos(x)
 x = np.linspace(0, np.pi, n);
 y = f(x);
 y2 = ip.second_derivate(x, y, 0, 0, 999999);
-mp.plot(x, y2);
+y2_real = -np.cos(x)
+mp.plot(x, y2, label='Calculated second derivate', color='red');
+mp.plot(x, y2_real, label='Real second derivate', color='blue');
 mp.title("Second derivate of cosinus");
+mp.legend(loc='upper left')
 mp.show();
 
 y_inter = np.zeros(n);
 for i in range(0, n - 1):
     y_inter[i] = ip.cubic_spline_meth(x, y, y2, x[i]);
 
-mp.plot(x, y_inter);
+mp.plot(x, y_inter, label='Interpolation of cosinus', color='red');
+mp.plot(x, y, label='True cosinus', color='blue')
 mp.title("Interpolation of cosinus with cubic_spline_meth");
+mp.legend(loc='upper right')
 mp.show();
 
 #----------------------------------#

@@ -53,7 +53,7 @@ def general_function(x,ax,Pol):
 
 
 
-(ex,ey,ix,iy) = load_foil("2032.dat")
+(ex,ey,ix,iy) = load_foil("boe103.dat")
 n = len(ex)
 x = np.arange(0., 1.01, 0.01)
 
