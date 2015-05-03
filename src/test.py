@@ -38,14 +38,14 @@ mp.show();
 #     TEST INTEGRATION METHODS     #
 #----------------------------------#
 
-print "Rectangle integration method on cosinus between 0 and pi:",ig.rect_meth(0.0, math.pi, 100, np.cos(x))
+print "Rectangle integration method on cosinus between 0 and pi/2 with 100 iterations:"
+print ig.rect_meth(0, np.pi/2., 100, f)
 
-#print "Simpson method on cosinus between 0 and pi:",ig.simpson_meth(0.0, math.pi, 100, np.cos(x))
+print "Simpson method on cosinus between 0 and pi/2 with 100 iterations:"
+print ig.simpson_meth(0.0, np.pi/2., 100, f)
 
-#print "Middle point method on cosinus between 0 and pi:",ig.midpoint_meth(0.0, math.pi, 100, np.cos(x))
-
-#print "Length of cosinus between 0 and pi:",ig.length(ig.rect_meth,100, -np.sin(x), 0.0, math.pi)
-
+print "Middle point method on cosinus between 0 and pi/2 with 100 iterations:"
+print ig.midpoint_meth(0.0, np.pi/2., 100, f)
 
 #----------------------------------#
 #     TEST LENGTH COMPUTING        #
@@ -54,8 +54,13 @@ print "Rectangle integration method on cosinus between 0 and pi:",ig.rect_meth(0
 dfi = lambda x: cf.general_function(x,cf.ix,ig.derivate(cf.Poli))
 dfe = lambda x: cf.general_function(x,cf.ex,ig.derivate(cf.Pole))
 
-print "Intrados length: ",ig.length(ig.rect_meth,100,lambda x: cf.general_function(x,cf.ix,ig.derivate(cf.Poli)),0.0,1.0)
-print "Extrados length: ",ig.length(ig.rect_meth,100,lambda x: cf.general_function(x,cf.ex,ig.derivate(cf.Pole)),0.0,1.0)
+print "Length of cosinus between 0 and pi/2 with 100 iterations:"
+print ig.length(ig.rect_meth,100, lambda x: -np.sin(x), 0.0, np.pi/2.)
+print "Intrados length:"
+print ig.length(ig.rect_meth,100,lambda x: cf.general_function(x,cf.ix,ig.derivate(cf.Poli)),0.0,1.0)
+print "Extrados length:"
+print ig.length(ig.rect_meth,100,lambda x: cf.general_function(x,cf.ex,ig.derivate(cf.Pole)),0.0,1.0)
 
-ig.comp_conv(lambda x: np.sqrt(1+(dfi(x)*dfi(x))),0.0,1.0)
-ig.comp_conv(lambda x: np.sqrt(1+(dfe(x)*dfe(x))),0.0,1.0)
+ig.comp_conv(lambda x: np.sqrt(1+(dfi(x)*dfi(x))),0.0,1.0, 1.01639654139)
+ig.comp_conv(lambda x: np.sqrt(1+(dfe(x)*dfe(x))),0.0,1.0, 1.078732871)
+ig.comp_conv(np.cos, 0.0, np.pi/2., 1.0)

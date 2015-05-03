@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import matplotlib.pyplot as mp
 import numpy.random as npr
 import interpolation as ip
 import integration as ig
-import load_foil as lf
+import charg_f as cf
 
 # Tracement de l'aile
 
-xhaut, yhaut, xbas, ybas = lf.load_foil("boe103.dat")
+xhaut, yhaut, xbas, ybas = cf.load_foil("boe103.dat")
 
 y2haut = ip.second_derivate(xhaut, yhaut, 0, 0, 999999)
 hhaut = np.max(yhaut)
@@ -46,10 +48,6 @@ def ligne(x, y, lamb, h):
 
     return y_ligne
 
-
-mp.plot(xhaut,y_interhaut, 'g')
-mp.plot(xbas, y_interbas, 'r')
-
 def plot_isobar(x, y, y_extremum, dy):
     lamb = 0.
     dlamb = np.abs(dy / (3. * y_extremum))
@@ -69,13 +67,13 @@ def reciprocal(y, y_wing, h):
 
 
 
-def pressure(x, y):
-    
-    line = lambda a: ligne(xhaut, y, 
-    return ig.length(ig.mont_carlo_meth, 99, derivate(line, 0.01), 0, x) - x
+#def pressure(x, y):
+#    line = lambda a: ligne(xhaut, y, 
+#    return ig.length(ig.mont_carlo_meth, 99, derivate(line, 0.01), 0, x) - x
 
 plot_isobar(xhaut, y_interhaut, hhaut, 0.01)
 plot_isobar(xbas, y_interbas, hbas, 0.01)
+mp.title('Airflow arround the airfoil of a Boeing')
 mp.gca().set_aspect('equal', adjustable='box')
 mp.show() 
 

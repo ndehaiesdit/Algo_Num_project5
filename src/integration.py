@@ -38,7 +38,7 @@ def midpoint_meth(x,y,n,f):
         s = s + f(x+(k*a)+(a/2.))
     return a*s
 
-def comp_conv(f,a,b):
+def comp_conv(f,a,b,exact_value):
     nmax = 100
     
     x = np.arange(1.0, nmax, 1.0)
@@ -46,6 +46,7 @@ def comp_conv(f,a,b):
     t = np.arange(1.0, nmax, 1.0)
     u = np.arange(1.0, nmax, 1.0)
     v = np.arange(1.0, nmax, 1.0)
+    w = np.arange(1.0, nmax, 1.0)
 
     for i in np.arange(0.0,t.size):
         t[i] = rect_meth(a,b,x[i],f)
@@ -56,15 +57,21 @@ def comp_conv(f,a,b):
     for i in np.arange(0.0,v.size):
         v[i] = midpoint_meth(a,b,x[i],f)
 
+    for i in np.arange(0.0,v.size):
+        w[i] = exact_value
+
     mp.clf()
     mp.semilogx()
-    g = mp.plot(x, t, linewidth=1.0)
-    h = mp.plot(x, u, linewidth=1.0)
-    i = mp.plot(x, v, linewidth=1.0)
-  
+    mp.plot(x, t, linewidth=1.0, label='Rectangle')
+    mp.plot(x, u, linewidth=1.0, label='Simpson')
+    mp.plot(x, v, linewidth=1.0, label='Midpoint')
+    mp.plot(x, w, linewidth=1.0, label='Value of the integral')
+    
+    
+    mp.title("Illustration of the convergence of the three integration methods");
     mp.xlabel('Number of subdivision points')
     mp.ylabel('Integral of f between a and b')
-    mp.legend((g,h,i),("Rectangle","Simpson","Middle Point"))
+    mp.legend(loc='upper right')
     mp.show()
 
 #--------------------#
