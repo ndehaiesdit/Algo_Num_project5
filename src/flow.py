@@ -9,73 +9,51 @@ import charg_f as cf
 
 # Tracement de l'aile
 
-xhaut, yhaut, xbas, ybas = cf.load_foil("boe103.dat")
+xup, yup, xdown, ydown = cf.load_foil("boe103.dat")
+y2up = ip.second_derivate(xup, yup, 0, 0, 999999)
+hup = np.max(yup)
+y2down = ip.second_derivate(xdown, ydown, 0, 0, 999999)
+hdown = np.min(ydown)
 
-y2haut = ip.second_derivate(xhaut, yhaut, 0, 0, 999999)
-hhaut = np.max(yhaut)
+# Retourne la fonction qui associe l'ordonnée de l'aile haute à l'abscisse x
+def y_wing_up(x):
+    return lambda x: ip.cubic_spline_meth(xup, yup, y2up, x)
 
-n = np.size(xhaut)
+# Retourne la fonction qui associe l'ordonnée de l'aile basse à l'abscisse x
+def y_wing_down(x):
+    return lambda x: ip.cubic_spline_meth(xdown, ydown, y2down, x)
 
-y_interhaut = np.zeros(n)
+# Tracé des lignes de courants
 
-for i in range(0, n - 1):
-    y_interhaut[i] = ip.cubic_spline_meth(xhaut, yhaut, y2haut, xhaut[i])
-
-y2bas = ip.second_derivate(xbas, ybas, 0, 0, 999999)
-hbas = np.min(ybas)
-
-n = np.size(xbas)
-
-y_interbas = np.zeros(n)
-
-for i in range(0, n - 1):
-    y_interbas[i] = ip.cubic_spline_meth(xbas, ybas, y2bas, xbas[i])
-
-mp.plot(xhaut, y_interhaut, 'g')
-mp.plot(xbas, y_interbas, 'r')
-mp.gca().set_aspect('equal', adjustable='box')
-mp.show()    
-
-
-#Tracé des lignes de courants
-
-def ligne(x, y, lamb, h):
-    n = np.size(x)
-    y_ligne = np.zeros(n)
-
-    for i in range(0, n):
-        y_ligne[i] = (1 - lamb) * y[i] + lamb*3*h
-
-    return y_ligne
-
-def plot_isobar(x, y, y_extremum, dy):
-    lamb = 0.
-    dlamb = np.abs(dy / (3. * y_extremum))
-    while lamb < 1:
-        mp.plot(x, ligne(x, y, lamb, y_extremum), 'black')
-        lamb = lamb + dlamb
-
-
+# Retourne les ordonnées de la ligne de champ connaissant les caractéristiques h et y_wing de l'aile
+# et la valeur lamb de la ligne de champ.
+def airflow(x, y_wing, lamb, h):
+    return (1. - lamb) * y_wing(x) + lamb*3.*h
 
 def derivate(f, epsilon):
     return lambda x: (f(x + epsilon) - f(x)) / epsilon
 
-# Renvoie lambda en donnant une ordonnée y, l'ordonnée du point de l'aile y_wing,
+# Renvoie lambda en donnant une abscisse x, une ordonnée y, l'ordonnée du point de l'aile y_wing,
 # et l'extremum h du point de l'aile
-def reciprocal(y, y_wing, h):
-    return (y - y_wing) / (3 * h - y_wing)
+def reciprocal(x, y, y_wing, h):
+    return (y - y_wing(x)) / (3 * h - y_wing(x))
 
+# Renvoie la longueur de la ligne de champ rencontrée au point (x, y) entre le 
+# connaissant les paramètres de l'aile y_wing et h
+def length_airflow(x, y):
+    h = hup
+    lamb = reciprocal(x, y, y_wing_up, h);
+    y_wing = y_wing_up
+    if lamb < 0 or lamb > 1:
+        h = hdown
+        lamb = reciprocal(x, y, y_wing_down, h);
+        y_wing = y_wing_down
+    if lamb < 0 or lamb > 1:
+        lamb = 1.
+    
+    f = lambda x: airflow(x, y_wing, lamb, h)
+    return length(ig.simpson_meth, 100, derivate(f, 0.0001), xup(0), xup(xup.size - 1))
 
-
-#def pressure(x, y):
-#    line = lambda a: ligne(xhaut, y, 
-#    return ig.length(ig.mont_carlo_meth, 99, derivate(line, 0.01), 0, x) - x
-
-plot_isobar(xhaut, y_interhaut, hhaut, 0.01)
-plot_isobar(xbas, y_interbas, hbas, 0.01)
-mp.title('Airflow arround the airfoil of a Boeing')
-mp.gca().set_aspect('equal', adjustable='box')
-mp.show()
-
+print length_airflow(0.2, 0.2) 
 
          
