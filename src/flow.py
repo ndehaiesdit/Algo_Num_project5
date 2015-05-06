@@ -8,39 +8,39 @@ import integration as ig
 import charg_f as cf
 
 # Tracement de l'aile
-
 xup, yup, xdown, ydown = cf.load_foil("boe103.dat")
 y2up = ip.second_derivate(xup, yup, 0, 0, 999999)
 hup = np.max(yup)
 y2down = ip.second_derivate(xdown, ydown, 0, 0, 999999)
 hdown = np.min(ydown)
 
-# Retourne la fonction qui associe l'ordonnée de l'aile haute à l'abscisse x
+# Retourne l'ordonnée de l'aile haute à l'abscisse x
 def y_wing_up(x):
-    return lambda x: ip.cubic_spline_meth(xup, yup, y2up, x)
+    return ip.cubic_spline_meth(xup, yup, y2up, x)
 
-# Retourne la fonction qui associe l'ordonnée de l'aile basse à l'abscisse x
+# Retourne l'ordonnée de l'aile basse à l'abscisse x
 def y_wing_down(x):
-    return lambda x: ip.cubic_spline_meth(xdown, ydown, y2down, x)
+    return ip.cubic_spline_meth(xdown, ydown, y2down, x)
 
-# Tracé des lignes de courants
-
-# Retourne les ordonnées de la ligne de champ connaissant les caractéristiques h et y_wing de l'aile
+# Retourne les ordonnées de la ligne de champ 
+# connaissant les caractéristiques h et y_wing de l'aile
 # et la valeur lamb de la ligne de champ.
 def airflow(x, y_wing, lamb, h):
-    return (1. - lamb) * y_wing(x) + lamb*3.*h
+    return (1. - lamb) * y_wing(x) + 3. * lamb * h
 
+# Retourne une approximation de la dérivée de f à partir d'un coefficient epsilon
 def derivate(f, epsilon):
     return lambda x: (f(x + epsilon) - f(x)) / epsilon
 
-# Renvoie lambda en donnant une abscisse x, une ordonnée y, l'ordonnée du point de l'aile y_wing,
-# et l'extremum h du point de l'aile
+# Renvoie lambda en donnant une abscisse x, une ordonnée y, 
+# l'ordonnée du point de l'aile y_wing, et l'extremum h du point de l'aile
 def reciprocal(x, y, y_wing, h):
-    return (y - y_wing(x)) / (3 * h - y_wing(x))
+    y_wing_x = y_wing(x)
+    return (y - y_wing_x) / (3 * h - y_wing_x)
 
 # Renvoie la longueur de la ligne de champ rencontrée au point (x, y) entre le 
 # connaissant les paramètres de l'aile y_wing et h
-def length_airflow(x, y):
+def length_airflow(x, y, iterations):
     h = hup
     lamb = reciprocal(x, y, y_wing_up, h);
     y_wing = y_wing_up
@@ -49,11 +49,26 @@ def length_airflow(x, y):
         lamb = reciprocal(x, y, y_wing_down, h);
         y_wing = y_wing_down
     if lamb < 0 or lamb > 1:
-        lamb = 1.
+        return xup[xup.size - 1] - xup[0]
     
     f = lambda x: airflow(x, y_wing, lamb, h)
-    return length(ig.simpson_meth, 100, derivate(f, 0.0001), xup(0), xup(xup.size - 1))
+    return ig.length(ig.simpson_meth, iterations, derivate(f, 0.0001), 
+                     xup[0], xup[xup.size - 1])
 
-print length_airflow(0.2, 0.2) 
+# Retourne la matrice de contenant les longueurs des lignes 
+# de champ avec matrix[0][0] = length_airflow(x, y) 
+# et un pas horyzontal et vertical step
+# iterations est le nombre d'itérations pour le calcul des longueurs
+def matrix_length(x, y, width, height, step, iterations) :
+    n = int(height / step)
+    m = int(width / step)
+    matrix = np.zeros((n, m))
+    for i in range(0, n):
+        for j in range(0, m):
+            matrix[i,j] = length_airflow(x, y, iterations);
+            x += step;
+        x = 0;
+        y -= step;
+    return matrix
 
          

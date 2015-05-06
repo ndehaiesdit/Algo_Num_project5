@@ -6,6 +6,7 @@ import math
 import numpy.random as npr
 import interpolation as ip
 import integration as ig
+import flow as fl
 import charg_f as cf
 
 #----------------------------------#
@@ -51,16 +52,34 @@ print ig.midpoint_meth(0.0, np.pi/2., 100, f)
 #     TEST LENGTH COMPUTING        #
 #----------------------------------#
 
-dfi = lambda x: cf.general_function(x,cf.ix,ig.derivate(cf.Poli))
-dfe = lambda x: cf.general_function(x,cf.ex,ig.derivate(cf.Pole))
+dfi = lambda x: cf.general_function(x, cf.ix, ig.derivate(cf.Poli))
+dfe = lambda x: cf.general_function(x, cf.ex, ig.derivate(cf.Pole))
+dfc = lambda x: -np.sin(x)
 
-print "Length of cosinus between 0 and pi/2 with 100 iterations:"
-print ig.length(ig.rect_meth,100, lambda x: -np.sin(x), 0.0, np.pi/2.)
-print "Intrados length:"
-print ig.length(ig.rect_meth,100,lambda x: cf.general_function(x,cf.ix,ig.derivate(cf.Poli)),0.0,1.0)
-print "Extrados length:"
-print ig.length(ig.rect_meth,100,lambda x: cf.general_function(x,cf.ex,ig.derivate(cf.Pole)),0.0,1.0)
+print "Intrados length with Simpson's method and 1000 iterations:"
+intrados_length = ig.length(ig.simpson_meth, 1000, dfi, 0.0, 1.0)
+print intrados_length
+print "Illustration of the convergence by calculating the length of the intrados"
+ig.comp_conv(lambda x: np.sqrt(1+(dfi(x)*dfi(x))),0.0,1.0, intrados_length)
 
-ig.comp_conv(lambda x: np.sqrt(1+(dfi(x)*dfi(x))),0.0,1.0, 1.01639654139)
-ig.comp_conv(lambda x: np.sqrt(1+(dfe(x)*dfe(x))),0.0,1.0, 1.078732871)
-ig.comp_conv(np.cos, 0.0, np.pi/2., 1.0)
+print "Extrados length with Simpson's method and 1000 iterations:"
+extrados_length = ig.length(ig.simpson_meth, 1000, dfe, 0.0, 1.0)
+print extrados_length
+print "Illustration of the convergence by calculating the length of the extrados"
+ig.comp_conv(lambda x: np.sqrt(1+(dfe(x)*dfe(x))),0.0,1.0, extrados_length)
+
+print "Length of cosinus between 0 and pi/2 with Simpson's method and 1000 iterations:"
+cosinus_length = ig.length(ig.simpson_meth, 1000, dfc, 0.0, np.pi/2.)
+print cosinus_length
+print "Illustration of the convergence by calculating the length of cosinus between 0 and pi/2"
+ig.comp_conv(lambda x: np.sqrt(1+(dfc(x)*dfc(x))), 0.0, np.pi/2., cosinus_length)
+
+#----------------------------------#
+#          TEST AIRFLOWS           #
+#----------------------------------#
+
+print "Length of the airflow between 0 and 1
+matrix = fl.matrix_length(0, 0.3, 1, 0.4, 0.05, 10)
+mp.matshow(matrix)
+mp.show();
+
