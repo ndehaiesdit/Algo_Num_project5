@@ -75,6 +75,7 @@ plot_isobar(xhaut, y_interhaut, hhaut, 0.01)
 plot_isobar(xbas, y_interbas, hbas, 0.01)
 mp.title('Airflow arround the airfoil of a Boeing')
 mp.gca().set_aspect('equal', adjustable='box')
-mp.show() 
+mp.show()
+
 
          
