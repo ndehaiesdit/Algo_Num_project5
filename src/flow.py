@@ -55,6 +55,29 @@ def length_airflow(x, y, iterations):
     return ig.length(ig.simpson_meth, iterations, derivate(f, 0.0001), 
                      xup[0], xup[xup.size - 1])
 
+# Plot les lignes de courant du coté de l'aile y_wing avec h son ordonnée extremum,
+# dy le pas séparant les lignes et n le nombre de point des lignes
+def plot_airflows_side(dy, n, y_wing, h):
+    x_airflow = np.linspace(xup[0], xup[xup.size - 1], n)
+    y_airflow = np.zeros(n)
+    lamb = 0.
+    dlamb = np.abs(dy / (3. * h))
+    while lamb < 1:
+        for i in range (0, n):
+            y_airflow[i] = airflow(x_airflow[i], y_wing, lamb, h)
+        mp.plot(x_airflow, y_airflow, color='black')
+        lamb += dlamb
+
+# Affiche les lignes de courant :
+# dy est le pas séparant les lignes et n le nombre de point des lignes
+def display_airflows(dy, n):
+    plot_airflows_side(dy, n, y_wing_up, hup)
+    plot_airflows_side(dy, n, y_wing_down, hdown)
+    mp.gca().set_aspect('equal', adjustable='box')
+    mp.title("Airflows")
+    mp.show();
+    
+
 # Retourne la matrice de contenant les longueurs des lignes 
 # de champ avec matrix[0][0] = length_airflow(x, y) 
 # et un pas horyzontal et vertical step

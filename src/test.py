@@ -1,4 +1,6 @@
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
+
 
 import numpy as np
 import matplotlib.pyplot as mp
@@ -78,8 +80,12 @@ ig.comp_conv(lambda x: np.sqrt(1+(dfc(x)*dfc(x))), 0.0, np.pi/2., cosinus_length
 #          TEST AIRFLOWS           #
 #----------------------------------#
 
-print "Length of the airflow between 0 and 1
-matrix = fl.matrix_length(0, 0.3, 1, 0.4, 0.05, 10)
+print "Airflows between 0 and 1 every 0.01 y"
+fl.display_airflows(0.01, 100)
+
+print "Lengths of the airflows between 0 and 1 every 0.005 x and y"
+matrix = fl.matrix_length(0, 0.3, 1, 0.4, 0.005, 10)
 mp.matshow(matrix)
+mp.title('Lengths of the airflows')
 mp.show();
 
