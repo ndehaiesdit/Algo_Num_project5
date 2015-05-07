@@ -82,13 +82,7 @@ def comp_conv(f,a,b,exact_value):
 # et I la fonction d'intégration utilisée
 def length(I, n, df, x, y):
     length = lambda x: np.sqrt(1 + (df(x)*df(x)))
-    return I(x, y, n, length)
-
-# def coef_to_fonction(A, B, C, D):
-#     return lambda x: A*(x**3) + B*(x**2) + C*x + D
-
-# def coef_to_deriv_fonction(A, B, C, D):
-#     return lambda x: A*3*(x**2) + B*2*x + C   
+    return I(x, y, n, length) 
     
 
 def derivate(Pol):
