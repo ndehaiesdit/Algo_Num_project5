@@ -42,14 +42,14 @@
     \end{tabular}}
   \vskip 4mm ~
 
-  ~~~\parbox{0.95\textwidth}{\small \textit{Abstract:} \sffamily This project implements a (somewhat basic) model to represent the air flow around an airfoil, i.e. the cross section of an aircraft's wing. The goal consists in obtaining a pressure map above and below the wing, so as to approximate the wing's lift, i.e. its ability to sustain the plane in the air. This is to be done in two steps: first, refine the airfoil into a sufficiently smooth curve, then compute the pressure map using integration methods. }
+  ~~~\parbox{0.95\textwidth}{\small \textit{Abstract:} \sffamily This project implements a somewhat basic model to represent the air flow around an airfoil, i.e. the cross section of an aircraft's wing. The goal consists in obtaining a pressure map above and below the wing, so as to approximate the wing's lift, i.e. its ability to sustain the plane in the air. This was to be done in two steps: first, refine the airfoil into a sufficiently smooth curve, then compute the pressure map using integration methods. }
   \vskip 1mm ~
 \end{minipage}
 
 %%%%%%%%%%%%%%%% Main part %%%%%%%%%%%%%%%%
 \section{Cubic spline interpolation method}
 
-To obtain an accurate model of air flow, some mathematics tools are needed. First of all, it is necessary to implement an interpolation method. It consists in computing an approximation of a function, based on a finite sample of values taken by this function in known points. In this project, the cubic spline method is chosen: here, the approximation between two consecutive points is a third degree polynomial. The continuity of two consecutive polynomials, their derivatives and their second derivative is kept to guarantee the global cohesion of the solution. An interesting choice to compute the cubic spline method is to calculate the second derivative first, and then to deduce the interpolation function itself. The algorithm used in this project is based on an \href{http://www.labri.fr/perso/fpierre/documents_enligne/c3-3.ps}{already-existing code} written in C we adapted to Python. Figure \ref{cosinus_second_derivate} is an example of the second derivative of cosine on $[0, \pi]$ obtained with this algorithm:
+To obtain an accurate model of air flow, some mathematical tools are needed. First of all, implementing an interpolation method was necessary. It consists in computing an approximation of a function, based on a finite sample of values taken by this function at known points. In this project, the cubic spline method was chosen: here, the approximation between two consecutive points is a third degree polynomial. The continuity of two consecutive polynomials, their derivatives and their second derivative is kept to guarantee the global cohesion of the solution. An interesting choice to compute the cubic spline method is to calculate the second derivative first, and then to deduce the interpolation function itself. The algorithm used in this project was based on an \href{http://www.labri.fr/perso/fpierre/documents_enligne/c3-3.ps}{already-existing code} written in C we adapted to Python. Figure \ref{cosinus_second_derivate} is an example of the second derivative of cosine on $[0, \pi]$ obtained with this algorithm:
 
 \begin{figure}[h]
   \centering
@@ -58,7 +58,7 @@ To obtain an accurate model of air flow, some mathematics tools are needed. Firs
   \label{cosinus_second_derivate}
 \end{figure}
 
-This graph is a comparison between the curve obtained with this algorithm and the real representation of the second derivative of cosine, which is
+This graph represents a comparison between the curve obtained with this algorithm and the real representation of the second derivative of cosine, which is
 
 \begin{equation}
 \begin{array}{ccccl}
@@ -67,9 +67,9 @@ This graph is a comparison between the curve obtained with this algorithm and th
 \end{array}
 \end{equation}
 
-The two curves are similar, but obviously, there are disturbances on each extremity of the computed one. It means that this algorithm sometimes doesn't give a satisfying result for the extreme side values of the considered interval. This fact will be important for the interpretation of the following results.\\\\
+The two curves are similar, but obviously there are disturbances on each extremity of the computed one, which means that this algorithm sometimes doesn't give a satisfactory result for the edge values of the considered interval. This fact would be important for the interpretation of the following results.\\\\
 
-Now that a good approximation of the second derivative of the function is calculated, it is clearly possible to compute the function itself. Figure \ref{cosinus_interpolation} is an example of an cubic spline interpolation of cosine on $[0, \pi]$ :
+Now that a good approximation of the second derivative of the function was calculated, it was clearly possible to compute the function itself. Figure \ref{cosinus_interpolation} is an example of a cubic spline interpolation of cosine on $[0, \pi]$ :
 
 \begin{figure}[h]
   \centering
@@ -78,10 +78,10 @@ Now that a good approximation of the second derivative of the function is calcul
   \label{cosinus_interpolation}
 \end{figure}
 
-Once again, the computed curve follows the real cosine curve, but diverges at the end of the interval. This might be due to the bad accuracy of the second derivative algorithm for the last values of the interval.
+Once again, the computed curve follows the real cosine curve, but diverges at the end of the interval. This might be due to the poor accuracy of the second derivative algorithm for the last values of the interval.
 
 \section{Integration methods}
-In order to map the pressure around the wing, an integration algorithm is needed. Here are implemented three different methods: the classical rectangle method, the Simpson's method and the midpoint method.
+In order to map the pressure around the wing, an integration algorithm is needed. Three different methods were implemented: the classical rectangle method, Simpson's method and the midpoint method.
 
 \subsection{Rectangle integration method}
 With this method, calculating the integral of a continuous function $f$ between $a$ and $b$ consists in summing the surfaces of $n$ rectangles defined by:
@@ -90,26 +90,26 @@ With this method, calculating the integral of a continuous function $f$ between 
 \item the height of rectangle $i \in \llbracket 0, n - 1 \rrbracket$ is $f(a + i\frac{b - a}{n})$ for the left rectangle method
 \item the height of rectangle $i \in \llbracket 1, n \rrbracket$ is $f(a + i\frac{b - a}{n})$ for the right rectangle method
 \end{itemize}
-Left and right methods are similar: they converge to the same value at the same speed.
+Left and right methods are similar, because they converge to the same value at the same speed.
 
 \subsection{Simpson's integration method}
-Simpson's method consists in summing the integrals of $n$ quadratic polynomials. Each polynomial is a Lagrangian interpolation of the function on three consecutive points.
-As a consequence, for each polynomial $P_i$ with $i \in \llbracket 0, n - 2 \rrbracket$, $P_i(a + i \frac{b-a}{2n}) = P_{i+1}(a + i \frac{b-a}{2n})$. Once the interpolations are made, it is easy to calculate their integral (polynomial of degree 2), and then to sum them. Because there are twice as points as quadratic polynomials, it is better to use an even number of points, or the last point, which is associated with no polynomial, will degrade the accuracy of the algorithm. This phenomenon is observable on the graphs below.
+Simpson's method consists in summing the integrals of $n$ quadratic polynomials. Each polynomial is a Lagrangian interpolation of the function at three consecutive points.
+As a consequence, for each polynomial $P_i$ with $i \in \llbracket 0, n - 2 \rrbracket$, $P_i(a + i \frac{b-a}{2n}) = P_{i+1}(a + i \frac{b-a}{2n})$. Once the interpolations are computed, it becomes easy to calculate their integral (polynomial of degree 2), and then to sum them. Because there are twice as many points as quadratic polynomials, it is better to use an even number of points, otherwise the last point, which is associated with no polynomial, will degrade the accuracy of the algorithm. This phenomenon is observable on the graphs on page 4.
 
 \subsection{Midpoint integration method}
-This method is similar to the classical rectangle method, except that instead of aligning the rectangles to the left or to the right, each rectangle is centered on the considered point. It is predictable that it doesn't accelerate the convergence, but each iteration of this method is generally more accurate than the rectangular one.
+This method is similar to the classical rectangle method, except that instead of aligning the rectangles to the left or to the right, each rectangle is centered on the related point. It is predictable that this doesn't accelerate the convergence, but each iteration of this method is generally more accurate than the rectangular one.
 
 \subsection{Comparison between the different methods}
 
-A good way to compare these different algorithms is to show the value of the integral calculated with each method with the same number of iterations. For example, in the test file is computed the integral between $0$ and $\frac{\pi}{2}$ of cosine, which is 1. After 100 iterations, the results are:
+A good way to compare these different algorithms is to show the value of the integral calculated with each method with the same number of iterations. For example, the integral between $0$ and $\frac{\pi}{2}$ of cosine was computed in the test file, which is equal to 1. After 100 iterations, the results are:
 \begin{itemize}
 \item 1.00783341987 for the rectangle method
-\item 1.00000000034 for the Simpson's method
+\item 1.00000000034 for Simpson's method
 \item 1.00001028091 for the middle point method
 \end{itemize}
 This means that, based on this criteria, the best algorithm is Simpson's method, then comes the middle point method and finally the rectangle method.
 
-It is also possible to display a graph representing the integral obtained in function of the number of iterations for each algorithm:
+It is also possible to display a graph representing the integral obtained in relation to the number of iterations for each algorithm:
 
 \begin{figure}[h]
   \centering
@@ -118,19 +118,19 @@ It is also possible to display a graph representing the integral obtained in fun
   \label{cosinus_integration}
 \end{figure}
 
-On figure \ref{cosinus_integration}, it is clear that the rectangle method is the less efficient algorithm of the three. But as explained before, the Simpson's method alternates between a really accurate approximation for even iterations and a poorer approximation for odd iterations. Globally, Simpson's method stays the most efficient algorithm between the three, if an even number of iteration is chosen.
+On figure \ref{cosinus_integration}, it is clear that the rectangle method is the least efficient algorithm of the three. But as explained before, Simpson's method alternates between a very accurate approximation for even iterations and a poorer approximation for odd iterations. Globally, Simpson's method stays the most efficient algorithm among the three, if an even number of iterations is chosen.
 
 \section{Length of a portion of curve}
 
-Once an interpolation and an integration tools are set, it is easy to calculate the length of a curve's portion of a function $f$, given the formula:
+Once interpolation and integration tools are set, it is easy to calculate the length of a curve's section of a function $f$, given the formula:
 \begin{equation}
   L([a, b]) = \int^a_b{\sqrt{1 + (f'(x))^2} dx}
 \end{equation} 
-$f$ is interpolated with the cubic spline method, then derivatives with a algorithm based on the manipulation of the coefficients of each polynomial of the interpolation function. The function $s: u \mapsto \sqrt{1 + u^2}$ is then applied. After the interpolation of $s$, it is finally possible to calculate its integral.
+$f$ is interpolated with the cubic spline method, then derivatives with a algorithm based on manipulating the coefficients of each polynomial of the interpolation function. The function $s: u \mapsto \sqrt{1 + u^2}$ is then applied. After the interpolation of $s$, it is finally possible to calculate its integral.
 
-\section{Model of the airflow around a wing}
+\section{Modelling of the airflow around a wing}
 
-All the mathematics tools are now set, it is possible to use it in order to model the airflow around the wing of a plane. After extracting the airfoil from a file with discrete values, it is easy to get an interpolation of the intrados and of the extrados. A simple model of the airflow on the extrados can be computed using this formula:
+Because all the mathematical tools were now set, it became possible to use them in order to model the airflow around the wing of a plane. After extracting the airfoil from a file with discrete values, it is easy to get an interpolation of the intrados and of the extrados, which are the names of both faces of the wing. A simple model of the airflow on the extrados can be computed using this formula:
 \begin{equation}
 \forall \lambda \in [0,1]: f_{\lambda}(x) = (1-\lambda)f(x) + 3\lambda h_{max}
 \end{equation}
@@ -145,7 +145,7 @@ with $f: D \to \mathbb{R}$ the function which associates the ordinate of the ext
 
 \newpage
 
-It is noticeable that the path of the airflow in contact with the extrados is longer than the path of the airflow in contact with the intrados. A particle which is in $x = 0$ at $t = 0$ will arrive at the same date $t_{end}$ at $x = x_{end}$ independently of $y$, that is to say the particles on the extrados are traveling faster than those on the intrados. This can be checked on figure \ref{boeing_length}: the speed of each airflow of figure \ref{boeing_airflow} is proportional to its length on [0, 1].
+The path of the airflow in contact with the extrados is longer than the path of the airflow in contact with the intrados, which is noteworthy. A particle which is in $x = 0$ at $t = 0$ will arrive at the same time $t_{end}$ at $x = x_{end}$ independently of $y$, that is to say the particles on the extrados are traveling faster than those on the intrados. This can be checked on figure \ref{boeing_length}: the speed of each airflow of figure \ref{boeing_airflow} is proportional to its length on [0, 1].
 
 \begin{figure}[h]
   \centering
@@ -154,16 +154,13 @@ It is noticeable that the path of the airflow in contact with the extrados is lo
   \label{boeing_length}
 \end{figure}
 
-The red parts of the graph are the aiflows which the speed is accelerated by the shape of the airfoil. The blue parts are not modified by it. Bernouilli law says that the pressure in one point is linked with the speed of the fluid with the formula ($\rho$ is the density of the air):
+The red parts of the graph are the airflows whose speed is accelerated by the shape of the airfoil, whereas the blue parts are not modified by it. Bernouilli's law says that the pressure at one point is linked with the speed of the fluid with the formula ($\rho$ is the density of the air):
 
 \begin{equation}
   p = constant - \frac{1}{2} \rho v^2
 \end{equation}
 
-It means that the higher the speed $v$ is, the lower the pressure $p$ is, and it is easy to conclude that, according to this model, the dynamic pressure is higher on the intrados than on the extrados. It is a possible explanation to the lift force.
-
-
-
+This means that the pressure $p$ decreases as the speed $v$ increases. It becomes then easy to conclude that, according to this model, the dynamic pressure is higher on the intrados than on the extrados, which is a possible explanation to the lift force.
 
 
 \end{document}
